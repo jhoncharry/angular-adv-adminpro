@@ -8,6 +8,9 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 
+import { Usuario } from '../models/usuario.model';
+import { MultiDataSet } from 'ng2-charts';
+
 const base_url = environment.base_url;
 
 declare const gapi: any;
@@ -19,6 +22,7 @@ declare const gapi: any;
 export class UsuarioService {
 
   public auth2: any;
+  public usuario: Usuario;
 
   constructor(
     private http: HttpClient,
@@ -28,6 +32,13 @@ export class UsuarioService {
     this.googleInit();
   }
 
+  get token(): string {
+    return localStorage.getItem("token") || "";
+  }
+
+  get uid(): string {
+    return this.usuario.uid;
+  }
 
   googleInit() {
 
@@ -52,17 +63,21 @@ export class UsuarioService {
   // Base del auth.guard
   validarToken(): Observable<boolean> {
 
-    const token = localStorage.getItem("token") || "";
 
     return this.http.get(`${base_url}/login/renew`, {
       headers: {
-        "token": token
+        "token": this.token
       }
     }).pipe(
 
       map((resp: any) => {
+
+        const { email, google, nombre, role, img = "", _id } = resp.usuarioDB;
+        this.usuario = new Usuario(nombre, email, "", img, role, google, _id);
+
         localStorage.setItem("token", resp.token);
         return true;
+
       }),
       catchError(error => of(false))
 
@@ -82,6 +97,22 @@ export class UsuarioService {
         })
 
       );
+
+  }
+
+
+  actualizarPefil(data: { email: string, nombre: string, role: string }) {
+
+    data = {
+      ...data,
+      role: this.usuario.role
+    }
+
+    return this.http.put(`${base_url}/usuarios/${this.uid}`, data, {
+      headers: {
+        "token": this.token
+      }
+    })
 
   }
 
