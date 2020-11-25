@@ -64,6 +64,8 @@ export class PerfilComponent implements OnInit {
 
     this.imagenSubir = file;
 
+    console.log(file);
+
     if (!file) {
       return this.imgTemp = null;
     }

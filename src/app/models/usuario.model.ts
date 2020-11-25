@@ -19,17 +19,16 @@ export class Usuario {
 
     get imagenUrl() {
 
-        /*      /upload/usuarios/8886f9c4-84a8-48a3-b6b5-998d9848b33c.jpg */
-
-        if (this.img.includes("https")) {
+        if (!this.img) {
+            return `${base_url}/upload/usuarios/no-image`
+        } else if (this.img.includes("https")) {
             return this.img
-        }
-
-        if (this.img) {
+        } else if (this.img) {
             return `${base_url}/upload/usuarios/${this.img}`
         } else {
             return `${base_url}/upload/usuarios/no-image`
         }
+
 
 
     }

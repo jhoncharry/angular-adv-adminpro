@@ -83,7 +83,7 @@ const customInitFunctions = () => {
             $(this).parents('.form-group').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
         }).trigger('blur');
 
- 
+
         // ============================================================== 
         //tooltip
         // ============================================================== 
@@ -140,6 +140,12 @@ const customInitFunctions = () => {
         // Close Card
         $('a[data-action="close"]').on('click', function () {
             $(this).closest('.card').removeClass().slideUp('fast');
+        });
+
+
+        // Init de tooltip (Funcion para titulos de los iconos hover)
+        $(document).ready(function () {
+            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
         });
 
     });
