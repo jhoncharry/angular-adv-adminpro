@@ -100,6 +100,29 @@ export class UsuarioService {
 
 
 
+  // Base del auth.guard
+  validarUsuarioSesion(): Observable<boolean> {
+
+
+    return this.http.get(`${base_url}/login/renew`, {
+      headers: {
+        "token": this.token
+      }
+    }).pipe(
+
+      map((resp: any) => {
+
+        return resp.usuarioDB.uid;
+
+      })
+
+    );
+
+  }
+
+
+
+
   crearUsuario(formData: RegisterForm) {
 
     return this.http.post(`${base_url}/usuarios`, formData)

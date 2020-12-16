@@ -1,6 +1,11 @@
+import { Usuario } from 'src/app/models/usuario.model';
+
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ModalImagenService } from '../../services/modal-imagen.service';
 import { FileUploadService } from '../../services/file-upload.service';
+
+import { UsuarioService } from 'src/app/services/usuario.service';
+
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,10 +21,22 @@ export class ModalImagenComponent implements OnInit {
   public imagenSubir: File;
   public imgTemp: any = null;
 
+  public id_usuario_connect: any;
+  public usuario: Usuario;
+
 
 
   constructor(public modalImagenService: ModalImagenService,
-    private fileUploadService: FileUploadService) { }
+    private fileUploadService: FileUploadService,
+    private usuarioService: UsuarioService,) {
+
+    this.usuarioService.validarUsuarioSesion().subscribe(resp => {
+      this.id_usuario_connect = resp;
+    });
+
+    this.usuario = usuarioService.usuario;
+
+  }
 
   ngOnInit(): void {
   }
@@ -60,6 +77,12 @@ export class ModalImagenComponent implements OnInit {
       .then(img => {
         Swal.fire("Guardado", "Imagen de usuario actualizada", "success");
         this.modalImagenService.nuevaImagen.emit(img);
+
+        if (this.id_usuario_connect === id) {
+          this.usuario.img = img
+        }
+
+
         this.cerrarModal();
       }).catch(error => {
         console.log(error);
@@ -68,5 +91,5 @@ export class ModalImagenComponent implements OnInit {
       });
   }
 
-  
+
 }
