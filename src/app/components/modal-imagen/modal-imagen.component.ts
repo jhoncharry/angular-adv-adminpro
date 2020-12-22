@@ -21,7 +21,6 @@ export class ModalImagenComponent implements OnInit {
   public imagenSubir: File;
   public imgTemp: any = null;
 
-  public id_usuario_connect: any;
   public usuario: Usuario;
 
 
@@ -29,10 +28,6 @@ export class ModalImagenComponent implements OnInit {
   constructor(public modalImagenService: ModalImagenService,
     private fileUploadService: FileUploadService,
     private usuarioService: UsuarioService,) {
-
-    this.usuarioService.validarUsuarioSesion().subscribe(resp => {
-      this.id_usuario_connect = resp;
-    });
 
     this.usuario = usuarioService.usuario;
 
@@ -78,7 +73,7 @@ export class ModalImagenComponent implements OnInit {
         Swal.fire("Guardado", "Imagen de usuario actualizada", "success");
         this.modalImagenService.nuevaImagen.emit(img);
 
-        if (this.id_usuario_connect === id) {
+        if (id === this.usuario.uid) {
           this.usuario.img = img
         }
 

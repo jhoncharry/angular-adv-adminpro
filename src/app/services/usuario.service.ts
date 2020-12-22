@@ -53,9 +53,13 @@ export class UsuarioService {
 
   }
 
+
+  
+
+
   googleInit() {
 
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
 
       gapi.load('auth2', () => {
         this.auth2 = gapi.auth2.init({
@@ -98,27 +102,6 @@ export class UsuarioService {
 
   }
 
-
-
-  // Base del auth.guard
-  validarUsuarioSesion(): Observable<boolean> {
-
-
-    return this.http.get(`${base_url}/login/renew`, {
-      headers: {
-        "token": this.token
-      }
-    }).pipe(
-
-      map((resp: any) => {
-
-        return resp.usuarioDB.uid;
-
-      })
-
-    );
-
-  }
 
 
 
