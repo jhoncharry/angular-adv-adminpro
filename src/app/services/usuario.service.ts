@@ -39,6 +39,10 @@ export class UsuarioService {
     return localStorage.getItem("token") || "";
   }
 
+  get role(): "ADMIN_ROLE" | "USER_ROLE" {
+    return this.usuario.role;
+  }
+
   get uid(): string {
     return this.usuario.uid;
   }
@@ -54,7 +58,7 @@ export class UsuarioService {
   }
 
 
-  
+
 
 
   googleInit() {
@@ -92,7 +96,9 @@ export class UsuarioService {
         const { email, google, nombre, role, img = "", uid } = resp.usuarioDB;
         this.usuario = new Usuario(nombre, email, "", img, role, google, uid);
 
-        localStorage.setItem("token", resp.token);
+        this.guardarLocalStorage(resp.token, resp.menu);
+
+
         return true;
 
       }),
@@ -112,7 +118,7 @@ export class UsuarioService {
       .pipe(
 
         tap((resp: any) => {
-          localStorage.setItem('token', resp.token)
+          this.guardarLocalStorage(resp.token, resp.menu);
         })
 
       );
@@ -153,7 +159,7 @@ export class UsuarioService {
       .pipe(
 
         tap((resp: any) => {
-          localStorage.setItem("token", resp.token);
+          this.guardarLocalStorage(resp.token, resp.menu);
         })
 
       );
@@ -169,7 +175,7 @@ export class UsuarioService {
       .pipe(
 
         tap((resp: any) => {
-          localStorage.setItem("token", resp.token);
+          this.guardarLocalStorage(resp.token, resp.menu);
         })
 
       );
@@ -182,6 +188,7 @@ export class UsuarioService {
   logout() {
 
     localStorage.removeItem("token");
+    localStorage.removeItem("menu");
 
     this.auth2.signOut().then(() => {
 
@@ -221,6 +228,12 @@ export class UsuarioService {
   eliminarUsuario(usuario: Usuario) {
     const url = `${base_url}/usuarios/${usuario.uid}`;
     return this.http.delete(url, this.headers)
+  }
+
+
+  guardarLocalStorage(token: string, menu: any) {
+    localStorage.setItem("token", token);
+    localStorage.setItem("menu", JSON.stringify(menu));
   }
 
 
